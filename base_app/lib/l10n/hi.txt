@@ -1,0 +1,315 @@
+i'll send u files for my app
+main.dart
+import 'package:flutter/material.dart';
+import 'HomePage.dart'; // Import the HomePage file
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(), // Home screen set to HomePage
+    );
+  }
+}
+
+HomePage.dart
+import 'package:flutter/material.dart';
+import 'RisksPage.dart'; // Import Risks Page
+import 'Pregnancy_Progress.dart'; // Import Pregnancy Tracker Page
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              "assets/logo.jpg", 
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Blurred Overlay
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+              ),
+            ),
+          ),
+
+          // Page Content
+          Column(
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2), 
+
+              // "Hello, " (Big & Centered)
+              Text(
+                "Hello, Pavithra!",
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: 10),
+
+              // Day Tracker Title
+              Text(
+                "Day Tracker / Calendar",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              // Feature Buttons (Scrollable to Prevent Overflow)
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      _buildFeatureCard(Icons.calendar_today, "Day Tracker / Calendar", () {}),
+                      _buildFeatureCard(Icons.build, "Tools / Services", () {}),
+                      _buildFeatureCard(
+                        Icons.pregnant_woman,
+                        "Pregnancy Tracker",
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PregnancyProgressPage()),
+                          );
+                        },
+                      ),
+                      _buildFeatureCard(Icons.edit, "Log Current Data", () {}),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // Fixed Bottom Navigation Bar
+      bottomNavigationBar: BottomAppBar(
+        color: Color(0xFF8B5E83),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom), 
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _bottomNavItem(Icons.warning, "SOS", () {}),
+              _bottomNavItem(Icons.bar_chart, "View Risks", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RisksPage()),
+                );
+              }),
+              _bottomNavItem(Icons.explore, "Discover", () {}),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Feature Buttons with Navigation
+  Widget _buildFeatureCard(IconData icon, String text, VoidCallback onTap) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5.0),
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          minimumSize: Size(double.infinity, 50),
+        ),
+        onPressed: onTap,
+        icon: Icon(icon, color: Colors.black),
+        label: Text(text),
+      ),
+    );
+  }
+
+  // Bottom Navigation Icons with Navigation
+  Widget _bottomNavItem(IconData icon, String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white),
+          SizedBox(height: 5),
+          Text(text, style: TextStyle(color: Colors.white, fontSize: 12)),
+        ],
+      ),
+    );
+  }
+}
+RisksPage.dart
+import 'package:flutter/material.dart';
+
+class RisksPage extends StatelessWidget {
+  const RisksPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFC599B6),
+      appBar: AppBar(
+        title: const Text("Health Risks"),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              _buildPlacard("Your Health Status", "Moderate Risk: 35%", Colors.red.shade700),
+              _buildPlacard("Systolic BP", "120 mmHg", Colors.blue.shade700),
+              _buildPlacard("Diastolic BP", "80 mmHg", Colors.blue.shade700),
+              _buildPlacard("Blood Sugar", "5.8 mmol/L", Colors.green.shade700),
+              _buildPlacard("Heart Rate", "75 BPM", Colors.red.shade700),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlacard(String title, String value, Color color) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+Pregrancy_Progress.dartimport 'package:flutter/material.dart';
+
+class PregnancyProgressPage extends StatelessWidget {
+  const PregnancyProgressPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFC599B6),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage: AssetImage('assets/logo.jpg'),
+                      radius: 30,
+                    ),
+                    const Icon(Icons.person, color: Colors.white, size: 35),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildPlacard("Pregnancy Week", "Week 20", Colors.red.shade700),
+              _buildPlacard(
+                "Baby's Growth",
+                "6.5 inches, 10.5 oz",
+                Colors.blue.shade700,
+              ),
+              _buildPlacard(
+                "Fetal Heart Rate",
+                "140 BPM",
+                Colors.green.shade700,
+              ),
+              _buildPlacard("Mother’s Weight", "65 kg", Colors.orange.shade700),
+              _buildPlacard(
+                "Amniotic Fluid Level",
+                "Normal",
+                Colors.purple.shade700,
+              ),
+              _buildPlacard("Iron Levels", "Sufficient", Colors.teal.shade700),
+              _buildPlacard("Blood Pressure", "Normal", Colors.brown.shade700),
+              _buildPlacard("Sugar Levels", "Controlled", Colors.cyan.shade700),
+              _buildPlacard(
+                "Mental Well-being",
+                "Stable",
+                Colors.pink.shade700,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlacard(String title, String value, Color color) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            "Track your pregnancy progress regularly.",
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+ 
